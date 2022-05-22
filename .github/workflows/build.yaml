@@ -1,0 +1,146 @@
+name: Build Debian Rootfs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: amd64,
+              qemu-arch: "x86_64",
+              name: 'Debian-bullseye-amd64',
+              artifact: 'debian-bullseye-amd64',
+              hostname: 'debian-bullseye-amd64',
+              qcow2: 'debian-bullseye-amd64.qcow2',
+              iface: 'enp0s3'
+            }
+          # - { 
+          #     os: ubuntu-latest,
+          #     arch: x86,
+          #     python-arch: x86,
+          #     python-ver: '3.8',
+          #     name: 'ubuntu-x86 cmake shared',
+          #     shared: 'yes',
+          #     artifact: 'ubuntu-cmake-shared-x86.7z',
+          #     build_type: 'Debug',
+          #     archiver: '7z a',
+          #     generators: 'Ninja' 
+          #   }
+          # - { 
+          #     os: ubuntu-latest, 
+          #     arch: x64, 
+          #     python-arch: x64, 
+          #     python-ver: '3.8', 
+          #     name: 'ubuntu-x64 cmake static',
+          #     shared: 'no',
+          #     artifact: 'ubuntu-cmake-static-x64.7z',
+          #     build_type: 'Debug',
+          #     archiver: '7z a',
+          #     generators: 'Ninja'
+          #   }
+          # - { 
+          #     os: ubuntu-latest,
+          #     arch: x86,
+          #     python-arch: x86,
+          #     python-ver: '3.8',
+          #     name: 'ubuntu-x86 cmake static',
+          #     shared: 'no',
+          #     artifact: 'ubuntu-cmake-static-x86.7z',
+          #     build_type: 'Debug',
+          #     archiver: '7z a',
+          #     generators: 'Ninja' 
+          #   }
+    steps:
+    - uses: actions/checkout@v2
+
+    # - name: '🛠️ Python setup'
+      # uses: actions/setup-python@v2
+      # with:
+        # python-version: ${{ matrix.config.python-ver }}
+
+    - name: '🚧 Dependency'
+      shell: bash
+      run: |
+        sudo apt update && sudo apt install libguestfs-tools qemu-utils qemu-user-static linux-image-generic -y
+      
+    - name: '🚧 Deboostrap 1st stage'
+      shell: bash
+      run: |
+        mkdir mnt
+        sudo debootstrap --foreign --arch=${{ matrix.config.arch }} --include=locales ${{ matrix.config.suite }} mnt/ http://deb.debian.org/debian
+    
+    - name: '🚧 Deboostrap 2nd stage'
+      shell: bash
+      run: |
+        sudo cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
+        sudo chroot mnt/ debootstrap/debootstrap --second-stage
+
+    - name: '🚧 Install Kernel'
+      shell: bash
+      run: |
+        sudo chroot mnt/ apt update && sudo chroot mnt/ apt install linux-image-${{ matrix.config.arch }} -y
+    
+    - name: '🚧 Install SSH'
+      shell: bash
+      run: |
+        sudo chroot mnt/ apt install openssh-server -y
+
+    - name: '🚧 Configure Debian'
+      shell: bash
+      run: |
+        echo >> mnt/etc/network/interfaces
+        echo 'auto ${{ matrix.config.iface }}' >> mnt/etc/network/interfaces
+        echo 'iface ${{ matrix.config.iface }} inet dhcp' >> mnt/etc/network/interfaces
+
+        cat /dev/null > mnt/etc/machine-id
+        echo ${{ matrix.config.hostname }} > mnt/etc/hostname
+
+      #  sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
+        sudo chroot mnt bash -c 'echo "root:root" | chpasswd'
+
+    - name: '📦 Remove QEMU'
+      shell: bash
+      run: |
+        sudo rm /usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
+
+    - name: '📦 Pack qcow2'
+      shell: bash
+      run: |
+        sudo virt-make-fs --type=ext4 --size=5G mnt raw.img
+        sudo qemu-img convert -c -f raw -O qcow2 raw.img artifact/${{ matrix.config.qcow2 }}
+
+    - name: '📦 Pack Initrd & Kernel'
+      shell: bash
+      run: |
+        sudo cp mnt/boot/vmlinu* ./artifact/
+        sudo cp mnt/boot/initrd.img-* ./artifact/
+
+    - name: '📦 Pack Rootfs'
+      shell: bash
+      run: |
+        ls -laR
+        mkdir artifact
+        tar cvf artifact/${{ matrix.config.rootfs }} --one-file-system mnt
+
+    - name: '📤 Upload artifact'
+      uses: actions/upload-artifact@v1
+      with:
+        path: ./artifact/
+        name: ${{ matrix.config.artifact }}
+
+  # publish:
+  #   needs: [Build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v2
+  #       with:
+  #         name: artifact
+  #         path: dist
