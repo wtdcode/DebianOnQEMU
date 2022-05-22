@@ -103,7 +103,7 @@ jobs:
         cat /dev/null > mnt/etc/machine-id
         echo ${{ matrix.config.hostname }} > mnt/etc/hostname
 
-      #  sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
+        # sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
         sudo chroot mnt bash -c 'echo "root:root" | chpasswd'
 
     - name: '📦 Remove QEMU'
