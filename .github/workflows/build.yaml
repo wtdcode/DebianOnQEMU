@@ -58,12 +58,12 @@ jobs:
               suite: bullseye,
               arch: armhf,
               qemu-arch: "arm",
-              name: 'Debian-bullseye-arm-armmp',
+              name: 'Debian-bullseye-armhf-armmp',
               kernel: 'linux-image-armmp',
-              artifact: 'debian-bullseye-arm-armmp',
-              hostname: 'debian-bullseye-arm-armmp',
-              qcow2: 'debian-bullseye-arm-armmp.qcow2',
-              rootfs: 'debian-bullseye-arm-armmp.tar.xz',
+              artifact: 'debian-bullseye-armhf-armmp',
+              hostname: 'debian-bullseye-armhf-armmp',
+              qcow2: 'debian-bullseye-armhf-armmp.qcow2',
+              rootfs: 'debian-bullseye-armhf-armmp.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
