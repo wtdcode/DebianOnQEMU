@@ -96,6 +96,7 @@ jobs:
     - name: '🚧 Configure Debian'
       shell: bash
       run: |
+        sudo ls -lha mnt/etc/network/
         sudo echo >> mnt/etc/network/interfaces
         sudo echo 'auto ${{ matrix.config.iface }}' >> mnt/etc/network/interfaces
         sudo echo 'iface ${{ matrix.config.iface }} inet dhcp' >> mnt/etc/network/interfaces
