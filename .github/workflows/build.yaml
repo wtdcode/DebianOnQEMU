@@ -108,7 +108,9 @@ jobs:
         sudo bash -c "echo ${{ matrix.config.hostname }} > mnt/etc/hostname"
 
         # sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
+        sudo bash -c "adduser --disabled-password --gecos '' debian"
         sudo chroot mnt bash -c 'echo "root:root" | chpasswd'
+        sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
 
     - name: '📦 Remove QEMU'
       shell: bash
