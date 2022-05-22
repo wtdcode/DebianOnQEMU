@@ -21,7 +21,7 @@ jobs:
               hostname: 'debian-bullseye-amd64',
               qcow2: 'debian-bullseye-amd64.qcow2',
               rootfs: 'debian-bullseye-amd64.tar.xz',
-              iface: 'enp0s3'
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           # - { 
           #     os: ubuntu-latest,
@@ -84,10 +84,12 @@ jobs:
         sudo cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
         sudo chroot mnt/ debootstrap/debootstrap --second-stage
 
-    - name: '🚧 Install Kernel'
+    - name: '🚧 Install Kernel & fstab'
       shell: bash
       run: |
+        sudo bash -c "echo 'fake /usr ext4 fake 0 1' > mnt/etc/fstab"
         sudo chroot mnt/ apt update && sudo chroot mnt/ apt install linux-image-${{ matrix.config.arch }} -y
+        sudo bash -c "echo '/dev/sda / ext4 errors=remount-ro 0 1' > mnt/etc/fstab"
     
     - name: '🚧 Install SSH'
       shell: bash
