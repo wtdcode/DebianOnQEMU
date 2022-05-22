@@ -131,7 +131,7 @@ jobs:
       run: |
         ls -la .
         ls -la artifact/
-        tar cvf artifact/${{ matrix.config.rootfs }} --one-file-system mnt
+        tar caf artifact/${{ matrix.config.rootfs }} --one-file-system mnt
 
     - name: '📤 Upload artifact'
       uses: actions/upload-artifact@v1
