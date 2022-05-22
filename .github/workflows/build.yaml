@@ -66,19 +66,19 @@ jobs:
               rootfs: 'debian-bullseye-armhf-armmp.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
-          - { 
-              os: ubuntu-latest, 
-              suite: bullseye,
-              arch: armel,
-              qemu-arch: "arm",
-              name: 'Debian-bullseye-armel-versatile',
-              kernel: 'linux-image-versatile',
-              artifact: 'debian-bullseye-armel-versatile',
-              hostname: 'debian-bullseye-armel-versatile',
-              qcow2: 'debian-bullseye-armel-versatile.qcow2',
-              rootfs: 'debian-bullseye-armel-versatile.tar.xz',
-              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
-            }
+          # - { 
+          #     os: ubuntu-latest, 
+          #     suite: bullseye,
+          #     arch: armel,
+          #     qemu-arch: "arm",
+          #     name: 'Debian-bullseye-armel-versatile',
+          #     kernel: 'linux-image-versatile', # Has been removed: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977126
+          #     artifact: 'debian-bullseye-armel-versatile',
+          #     hostname: 'debian-bullseye-armel-versatile',
+          #     qcow2: 'debian-bullseye-armel-versatile.qcow2',
+          #     rootfs: 'debian-bullseye-armel-versatile.tar.xz',
+          #     iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+          #   }
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
