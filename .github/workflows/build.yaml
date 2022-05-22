@@ -20,7 +20,7 @@ jobs:
               artifact: 'debian-bullseye-amd64',
               hostname: 'debian-bullseye-amd64',
               qcow2: 'debian-bullseye-amd64.qcow2',
-              rootfs: 'debian-bullseye-amd64.rootfs',
+              rootfs: 'debian-bullseye-amd64.tar.xz',
               iface: 'enp0s3'
             }
           # - { 
