@@ -2,6 +2,9 @@ name: Build Debian Rootfs
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   Build:
@@ -23,49 +26,20 @@ jobs:
               rootfs: 'debian-bullseye-amd64.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
-          # - { 
-          #     os: ubuntu-latest,
-          #     arch: x86,
-          #     python-arch: x86,
-          #     python-ver: '3.8',
-          #     name: 'ubuntu-x86 cmake shared',
-          #     shared: 'yes',
-          #     artifact: 'ubuntu-cmake-shared-x86.7z',
-          #     build_type: 'Debug',
-          #     archiver: '7z a',
-          #     generators: 'Ninja' 
-          #   }
-          # - { 
-          #     os: ubuntu-latest, 
-          #     arch: x64, 
-          #     python-arch: x64, 
-          #     python-ver: '3.8', 
-          #     name: 'ubuntu-x64 cmake static',
-          #     shared: 'no',
-          #     artifact: 'ubuntu-cmake-static-x64.7z',
-          #     build_type: 'Debug',
-          #     archiver: '7z a',
-          #     generators: 'Ninja'
-          #   }
-          # - { 
-          #     os: ubuntu-latest,
-          #     arch: x86,
-          #     python-arch: x86,
-          #     python-ver: '3.8',
-          #     name: 'ubuntu-x86 cmake static',
-          #     shared: 'no',
-          #     artifact: 'ubuntu-cmake-static-x86.7z',
-          #     build_type: 'Debug',
-          #     archiver: '7z a',
-          #     generators: 'Ninja' 
-          #   }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: mips64el,
+              qemu-arch: "mips64el",
+              name: 'Debian-bullseye-mips64el',
+              artifact: 'debian-bullseye-mips64el',
+              hostname: 'debian-bullseye-mips64el',
+              qcow2: 'debian-bullseye-mips64el.qcow2',
+              rootfs: 'debian-bullseye-mips64el.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
     steps:
     - uses: actions/checkout@v2
-
-    # - name: '🛠️ Python setup'
-      # uses: actions/setup-python@v2
-      # with:
-        # python-version: ${{ matrix.config.python-ver }}
 
     - name: '🚧 Dependency'
       shell: bash
@@ -141,13 +115,24 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         path: ./artifact/
-        name: ${{ matrix.config.artifact }}
 
-  # publish:
-  #   needs: [Build]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/download-artifact@v2
-  #       with:
-  #         name: artifact
-  #         path: dist
+  publish:
+    needs: [Build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: artifact
+
+      - name: '📦 Check artifacts'
+        shell: bash
+        run: |
+          ls -la artifact/
+      
+      - name: '📦 Release'
+        if: startsWith(github.ref, 'refs/tags')
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          files: ./artifact/*
