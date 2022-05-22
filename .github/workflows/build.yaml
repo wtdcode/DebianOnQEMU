@@ -96,13 +96,13 @@ jobs:
     - name: '🚧 Configure Debian'
       shell: bash
       run: |
-        sudo ls -lha mnt/etc/network/
-        sudo echo >> mnt/etc/network/interfaces
-        sudo echo 'auto ${{ matrix.config.iface }}' >> mnt/etc/network/interfaces
-        sudo echo 'iface ${{ matrix.config.iface }} inet dhcp' >> mnt/etc/network/interfaces
+        sudo bash -c "ls -lha mnt/etc/network/"
+        sudo bash -c "echo >> mnt/etc/network/interfaces"
+        sudo bash -c "echo 'auto ${{ matrix.config.iface }}' >> mnt/etc/network/interfaces"
+        sudo bash -c "echo 'iface ${{ matrix.config.iface }} inet dhcp' >> mnt/etc/network/interfaces"
 
-        sudo cat /dev/null > mnt/etc/machine-id
-        sudo echo ${{ matrix.config.hostname }} > mnt/etc/hostname
+        sudo bash -c "cat /dev/null > mnt/etc/machine-id"
+        sudo bash -c "echo ${{ matrix.config.hostname }} > mnt/etc/hostname"
 
         # sudo chroot mnt bash -c 'echo "debian:debian" | chpasswd'
         sudo chroot mnt bash -c 'echo "root:root" | chpasswd'
