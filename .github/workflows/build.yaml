@@ -128,7 +128,8 @@ jobs:
     - name: '📦 Pack Rootfs'
       shell: bash
       run: |
-        ls -laR  
+        ls -la .
+        ls -la artifact/
         tar cvf artifact/${{ matrix.config.rootfs }} --one-file-system mnt
 
     - name: '📤 Upload artifact'
