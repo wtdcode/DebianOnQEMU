@@ -40,6 +40,32 @@ jobs:
               rootfs: 'debian-bullseye-mips64el-malta.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: arm,
+              qemu-arch: "arm",
+              name: 'Debian-bullseye-arm-armmp',
+              kernel: 'linux-image-armmp',
+              artifact: 'debian-bullseye-arm-armmp',
+              hostname: 'debian-bullseye-arm-armmp',
+              qcow2: 'debian-bullseye-arm-armmp.qcow2',
+              rootfs: 'debian-bullseye-arm-armmp.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: arm64,
+              qemu-arch: "aarch64",
+              name: 'Debian-bullseye-arm64',
+              kernel: 'linux-image-arm64',
+              artifact: 'debian-bullseye-arm64',
+              hostname: 'debian-bullseye-arm64',
+              qcow2: 'debian-bullseye-arm64.qcow2',
+              rootfs: 'debian-bullseye-arm64.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
     steps:
     - uses: actions/checkout@v2
 
