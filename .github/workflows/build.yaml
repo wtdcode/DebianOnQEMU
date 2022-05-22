@@ -74,14 +74,14 @@ jobs:
     - name: '🚧 Deboostrap 1st stage'
       shell: bash
       run: |
-        mkdir mnt
+        sudo mkdir mnt
         sudo debootstrap --foreign --arch=${{ matrix.config.arch }} --include=locales ${{ matrix.config.suite }} mnt/ http://deb.debian.org/debian
     
     - name: '🚧 Deboostrap 2nd stage'
       shell: bash
       run: |
         sudo cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
-        sudo chroot mnt/ debootstrap/debootstrap --second-stage || cat mnt/debootstrap/debootstrap.log
+        sudo chroot mnt/ debootstrap/debootstrap --second-stage
 
     - name: '🚧 Install Kernel'
       shell: bash
