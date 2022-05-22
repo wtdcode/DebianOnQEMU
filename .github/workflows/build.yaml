@@ -56,7 +56,7 @@ jobs:
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
-              arch: arm,
+              arch: armhf,
               qemu-arch: "arm",
               name: 'Debian-bullseye-arm-armmp',
               kernel: 'linux-image-armmp',
