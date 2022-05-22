@@ -9,7 +9,9 @@ Download `vmlinuz`, `initrd` and `qcow2` image from the release page, and start 
 A sample for `amd64`:
 
 ```bash
-qemu-system-x86_64 -m 512 -kernel ./vmlinuz-5.10.0-13-amd64 -initrd \
-                   ./initrd.img-5.10.0-13-amd64  -append "console=ttyS0 debug root=/dev/sda net.ifnames=0" \
-                   -hda ./debian-bullseye-amd64.qcow2 -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
+qemu-system-x86_64 -m 512 -kernel ./vmlinuz-5.10.0-13-amd64 \
+                   -initrd ./initrd.img-5.10.0-13-amd64 \
+                   -append "console=ttyS0 debug root=/dev/sda net.ifnames=0" \
+                   -hda ./debian-bullseye-amd64.qcow2 -nographic \
+                   -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
