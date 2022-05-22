@@ -156,6 +156,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ./artifact/
+        name: artifact
 
   publish:
     needs: [Build]
