@@ -115,8 +115,9 @@ jobs:
     - name: '📦 Pack qcow2'
       shell: bash
       run: |
+        mkdir artifact
         sudo virt-make-fs --type=ext4 --size=5G mnt raw.img
-        sudo qemu-img convert -c -f raw -O qcow2 raw.img artifact/${{ matrix.config.qcow2 }}
+        qemu-img convert -c -f raw -O qcow2 raw.img artifact/${{ matrix.config.qcow2 }}
 
     - name: '📦 Pack Initrd & Kernel'
       shell: bash
@@ -127,8 +128,7 @@ jobs:
     - name: '📦 Pack Rootfs'
       shell: bash
       run: |
-        ls -laR
-        mkdir artifact
+        ls -laR  
         tar cvf artifact/${{ matrix.config.rootfs }} --one-file-system mnt
 
     - name: '📤 Upload artifact'
