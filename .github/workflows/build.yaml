@@ -72,7 +72,7 @@ jobs:
               arch: armel,
               qemu-arch: "arm",
               name: 'Debian-bullseye-armel-versatile',
-              kernel: 'linux-image-armel-versatile',
+              kernel: 'linux-image-versatile',
               artifact: 'debian-bullseye-armel-versatile',
               hostname: 'debian-bullseye-armel-versatile',
               qcow2: 'debian-bullseye-armel-versatile.qcow2',
