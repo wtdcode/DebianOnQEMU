@@ -30,14 +30,14 @@ jobs:
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
-              arch: mips,
-              qemu-arch: "mips",
-              name: 'Debian-bullseye-mips-malta',
+              arch: mipsel,
+              qemu-arch: "mipsel",
+              name: 'Debian-bullseye-mipsel-malta',
               kernel: 'linux-image-4kc-malta',
-              artifact: 'debian-bullseye-mips-malta',
-              hostname: 'debian-bullseye-mips-malta',
-              qcow2: 'debian-bullseye-mips-malta.qcow2',
-              rootfs: 'debian-bullseye-mips-malta.tar.xz',
+              artifact: 'debian-bullseye-mipsel-malta',
+              hostname: 'debian-bullseye-mipsel-malta',
+              qcow2: 'debian-bullseye-mipsel-malta.qcow2',
+              rootfs: 'debian-bullseye-mipsel-malta.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
