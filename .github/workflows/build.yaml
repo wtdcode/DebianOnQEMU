@@ -69,6 +69,19 @@ jobs:
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
+              arch: armel,
+              qemu-arch: "arm",
+              name: 'Debian-bullseye-armel-versatile',
+              kernel: 'linux-image-armel-versatile',
+              artifact: 'debian-bullseye-armel-versatile',
+              hostname: 'debian-bullseye-armel-versatile',
+              qcow2: 'debian-bullseye-armel-versatile.qcow2',
+              rootfs: 'debian-bullseye-armel-versatile.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
               arch: arm64,
               qemu-arch: "aarch64",
               name: 'Debian-bullseye-arm64',
