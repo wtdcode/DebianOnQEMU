@@ -81,7 +81,7 @@ jobs:
       shell: bash
       run: |
         sudo cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
-        sudo chroot mnt/ debootstrap/debootstrap --second-stage
+        sudo chroot mnt/ debootstrap/debootstrap --second-stage || cat mnt/debootstrap/debootstrap.log
 
     - name: '🚧 Install Kernel'
       shell: bash
