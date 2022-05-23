@@ -92,6 +92,19 @@ jobs:
               rootfs: 'debian-bullseye-arm64.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: i386,
+              qemu-arch: "i386",
+              name: 'Debian-bullseye-i386',
+              kernel: 'linux-image-686',
+              artifact: 'debian-bullseye-i386',
+              hostname: 'debian-bullseye-i386',
+              qcow2: 'debian-bullseye-i386.qcow2',
+              rootfs: 'debian-bullseye-i386.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
     steps:
     - uses: actions/checkout@v2
 
