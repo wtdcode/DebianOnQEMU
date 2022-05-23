@@ -1,0 +1,22 @@
+on:
+  schedule:
+    - cron: '0 9 5 */2 *'
+  workflow_dispatch:
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: '🐙 Tag & Push'
+        shell: bash
+        run: |
+          git tag "v`date +'%Y.%m.%d'`"
+  
+      - name: '🐙 Push tags to trigger building'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.RELEASE_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
