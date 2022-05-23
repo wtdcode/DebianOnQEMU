@@ -121,14 +121,14 @@ jobs:
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
-              arch: ppc64le,
+              arch: ppc64el,
               qemu-arch: "ppc64le",
-              name: 'Debian-bullseye-ppc64le',
+              name: 'Debian-bullseye-ppc64el',
               kernel: 'linux-image-powerpc64le',
-              artifact: 'debian-bullseye-ppc64le',
-              hostname: 'debian-bullseye-ppc64le',
-              qcow2: 'debian-bullseye-ppc64le.qcow2',
-              rootfs: 'debian-bullseye-ppc64le.tar.xz',
+              artifact: 'debian-bullseye-ppc64el',
+              hostname: 'debian-bullseye-ppc64el',
+              qcow2: 'debian-bullseye-ppc64el.qcow2',
+              rootfs: 'debian-bullseye-ppc64el.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
     steps:
