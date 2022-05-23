@@ -12,6 +12,8 @@ jobs:
       - name: '🐙 Tag & Push'
         shell: bash
         run: |
+          git config --local user.name "mio"
+          git config --local user.email "mio@lazym.io"
           git tag "v`date +'%Y.%m.%d'`"
   
       - name: '🐙 Push tags to trigger building'
