@@ -126,7 +126,7 @@ jobs:
               name: 'Debian-bullseye-ppc64le',
               kernel: 'linux-image-powerpc64le',
               artifact: 'debian-bullseye-ppc64le',
-              hostname: 'debian-bullseye-ppc64'le,
+              hostname: 'debian-bullseye-ppc64le',
               qcow2: 'debian-bullseye-ppc64le.qcow2',
               rootfs: 'debian-bullseye-ppc64le.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
