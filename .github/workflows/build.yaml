@@ -105,17 +105,30 @@ jobs:
               rootfs: 'debian-bullseye-i386.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
+          # - { 
+          #     os: ubuntu-latest, 
+          #     suite: bullseye,
+          #     arch: riscv64, # In progress, ref: https://www.debian.org/ports/ as of 2022.5.23
+          #     qemu-arch: "riscv64",
+          #     name: 'Debian-bullseye-riscv64',
+          #     kernel: 'linux-image-riscv64',
+          #     artifact: 'debian-bullseye-riscv64',
+          #     hostname: 'debian-bullseye-riscv64',
+          #     qcow2: 'debian-bullseye-riscv64.qcow2',
+          #     rootfs: 'debian-bullseye-riscv64.tar.xz',
+          #     iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+          #   }
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
-              arch: riscv64,
-              qemu-arch: "riscv64",
-              name: 'Debian-bullseye-riscv64',
-              kernel: 'linux-image-riscv64',
-              artifact: 'debian-bullseye-riscv64',
-              hostname: 'debian-bullseye-riscv64',
-              qcow2: 'debian-bullseye-riscv64.qcow2',
-              rootfs: 'debian-bullseye-riscv64.tar.xz',
+              arch: ppc64le,
+              qemu-arch: "ppc64le",
+              name: 'Debian-bullseye-ppc64le',
+              kernel: 'linux-image-powerpc64le',
+              artifact: 'debian-bullseye-ppc64le',
+              hostname: 'debian-bullseye-ppc64'le,
+              qcow2: 'debian-bullseye-ppc64le.qcow2',
+              rootfs: 'debian-bullseye-ppc64le.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
     steps:
