@@ -15,3 +15,5 @@ qemu-system-x86_64 -m 512 -kernel ./vmlinuz-5.10.0-13-amd64 \
                    -hda ./debian-bullseye-amd64.qcow2 -nographic \
                    -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
+
+Note there are two users created by default: `root:root` and `debian:debian`.
