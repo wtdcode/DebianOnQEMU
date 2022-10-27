@@ -131,6 +131,19 @@ jobs:
               rootfs: 'debian-bullseye-ppc64el.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: s390x,
+              qemu-arch: "s390x",
+              name: 'Debian-bullseye-s390x',
+              kernel: 'linux-image-s390x',
+              artifact: 'debian-bullseye-s390x',
+              hostname: 'debian-bullseye-s390x',
+              qcow2: 'debian-bullseye-s390x.qcow2',
+              rootfs: 'debian-bullseye-s390x.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
     steps:
     - uses: actions/checkout@v2
 
