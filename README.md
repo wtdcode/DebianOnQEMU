@@ -103,7 +103,6 @@ qemu-system-mips64el -m 512 -M malta -cpu 5KEc -kernel ./vmlinuz-5.10.0-26-5kc-m
             -hda ./debian-bullseye-mips64el-malta.qcow2 \
             -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
-
 ## Usage
 
 Two users created: `root:root` and `debian:debian` and ssh server is up by default.
