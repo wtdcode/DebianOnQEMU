@@ -9,7 +9,9 @@ on:
 jobs:
   Build:
     runs-on: ${{ matrix.config.os }}
-    container: lazymio/qemu-full
+    container:
+      image: lazymio/qemu-full
+      options: --prvileged
     name: ${{ matrix.config.name }}
     strategy:
       fail-fast: false
@@ -204,6 +206,8 @@ jobs:
     - name: '🚧 Deboostrap 2nd stage'
       shell: bash
       run: |
+        update-binfmts --display
+        find /opt/binfmt -name "qemu-*" -exec update-binfmts --enable '{}' ';'
         cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
         chroot mnt/ debootstrap/debootstrap --second-stage
 
