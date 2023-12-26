@@ -106,19 +106,19 @@ jobs:
               rootfs: 'debian-bullseye-i386.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
-          # - { 
-          #     os: ubuntu-latest, 
-          #     suite: bullseye,
-          #     arch: riscv64, # In progress, ref: https://www.debian.org/ports/ as of 2022.5.23
-          #     qemu-arch: "riscv64",
-          #     name: 'Debian-bullseye-riscv64',
-          #     kernel: 'linux-image-riscv64',
-          #     artifact: 'debian-bullseye-riscv64',
-          #     hostname: 'debian-bullseye-riscv64',
-          #     qcow2: 'debian-bullseye-riscv64.qcow2',
-          #     rootfs: 'debian-bullseye-riscv64.tar.xz',
-          #     iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
-          #   }
+          - { 
+              os: ubuntu-latest, 
+              suite: unstable,
+              arch: riscv64,
+              qemu-arch: "riscv64",
+              name: 'Debian-bullseye-riscv64',
+              kernel: 'linux-image-riscv64',
+              artifact: 'debian-bullseye-riscv64',
+              hostname: 'debian-bullseye-riscv64',
+              qcow2: 'debian-bullseye-riscv64.qcow2',
+              rootfs: 'debian-bullseye-riscv64.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
           - { 
               os: ubuntu-latest, 
               suite: bullseye,
@@ -188,26 +188,17 @@ jobs:
     # https://wiki.debian.org/LoongArch/sbuildQEMU
     # https://docs.loongnix.cn/loongnix/faq/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A1%8C%E9%9D%A2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html
     - name: '🚧 Deboostrap 1st stage (loongarch64)'
-      if: ${{ contains(matrix.config.arch, 'loong64') }}
+      if: ${{ contains(matrix.config.arch, 'loong64') || contains(matrix.config.arch, 'riscv64') }}
       shell: bash
       run: |
         mkdir mnt
         debootstrap --foreign --arch=${{ matrix.config.arch }} \
                          --variant=buildd --include=locales \
                          --include=debian-ports-archive-keyring \
-                         --components=main,non-free,contrib \
+                         --components=main \
                          --keyring=/etc/apt/trusted.gpg.d/debian-ports-archive-2023.gpg \
                          --extra-suites=unreleased \
                          ${{ matrix.config.suite }} mnt/ http://ftp.ports.debian.org/debian-ports
-        cat >/tmp/qemu-loongarch64 <<EOF
-        package qemu-user-static
-        type magic
-        offset 0
-        magic \x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01                    
-        mask \xff\xff\xff\xff\xff\xff\xff\xfc\x00\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff
-        interpreter /usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
-        EOF
-        update-binfmts --import /tmp/qemu-loongarch64 
     
 
     - name: '🚧 Deboostrap 2nd stage'
