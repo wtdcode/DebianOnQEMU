@@ -182,6 +182,7 @@ jobs:
         apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring binfmt-support -y
       
     - name: '🚧 Deboostrap 1st stage'
+      if: ${{ !(contains(matrix.config.arch, 'loong64') || contains(matrix.config.arch, 'riscv64')) }}
       shell: bash
       run: |
         mkdir mnt
@@ -207,9 +208,9 @@ jobs:
       shell: bash
       run: |
         update-binfmts --display
-        ls /opt/binfmt/ | awk '{print $1}' | xargs update-binfmts --unimport
-        ls /opt/binfmt/ | awk '{print $1}' | xargs update-binfmts --importdir /opt/binfmt --import
-        ls /opt/binfmt/ | awk '{print $1}' | xargs update-binfmts --enable
+        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt --unimport
+        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt --import
+        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --enable
         update-binfmts --display
         cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
         chroot mnt/ debootstrap/debootstrap --second-stage
