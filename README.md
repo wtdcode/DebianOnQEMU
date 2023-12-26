@@ -4,6 +4,8 @@ Debian qcow2 multi-arch images on QEMU.
 
 If this project helps you, please give it a star!
 
+You may also be interested in the side project: [qemu-full](https://github.com/wtdcode/qemu-full)
+
 ## Quick Start
 
 Download `vmlinuz`, `initrd` and `qcow2` image from the release page, and start your virtual machine with QEMU.
