@@ -17,6 +17,7 @@ Below are a few quick start command lines. Note the file names should be replace
 ### AMD64
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-x86_64 -m 512 -kernel ./vmlinuz-5.10.0-13-amd64 \
                    -initrd ./initrd.img-5.10.0-13-amd64 \
                    -append "console=ttyS0 debug root=/dev/sda net.ifnames=0" \
@@ -27,6 +28,7 @@ qemu-system-x86_64 -m 512 -kernel ./vmlinuz-5.10.0-13-amd64 \
 ## i386
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-i386 -m 512 -kernel ./vmlinuz-5.10.0-26-686 \
                  -initrd ./initrd.img-5.10.0-26-686 \
                  -append "console=ttyS0 debug root=/dev/sda net.ifnames=0" \
@@ -37,6 +39,7 @@ qemu-system-i386 -m 512 -kernel ./vmlinuz-5.10.0-26-686 \
 ### ARM
 
 ```bash
+docker run -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-arm -m 512 -M virt -cpu cortex-a15 \
                 -kernel ./vmlinuz-5.10.0-13-armmp \
                 -initrd ./initrd.img-5.10.0-13-armmp \
@@ -48,6 +51,7 @@ qemu-system-arm -m 512 -M virt -cpu cortex-a15 \
 ### ARM64
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-aarch64 -m 512 -M virt -cpu cortex-a57 -kernel ./vmlinuz-5.10.0-26-arm64 \
                     -initrd ./initrd.img-5.10.0-26-arm64 \
                     -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
@@ -61,6 +65,7 @@ qemu-system-aarch64 -m 512 -M virt -cpu cortex-a57 -kernel ./vmlinuz-5.10.0-26-a
 ### S390x
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-aarch64 -m 512 -kernel ./vmlinuz-5.10.0-26-arm64 -initrd ./initrd.img-5.10.0-26-arm64 \
                     -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
                     -hda ./debian-bullseye-arm64.qcow2 \
@@ -71,6 +76,7 @@ qemu-system-aarch64 -m 512 -kernel ./vmlinuz-5.10.0-26-arm64 -initrd ./initrd.im
 
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-ppc64 -m 512 -cpu power9 -kernel ./vmlinux-5.10.0-26-powerpc64le \
                   -initrd ./initrd.img-5.10.0-26-powerpc64le \
                   -append "console=hvc0 debug root=/dev/sda net.ifnames=0" \
@@ -81,6 +87,7 @@ qemu-system-ppc64 -m 512 -cpu power9 -kernel ./vmlinux-5.10.0-26-powerpc64le \
 ### MIPS
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-mipsel -m 512 -M malta -kernel ./vmlinuz-5.10.0-26-4kc-malta \
                    -initrd ./initrd.img-5.10.0-26-4kc-malta \
                    -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
@@ -89,11 +96,12 @@ qemu-system-mipsel -m 512 -M malta -kernel ./vmlinuz-5.10.0-26-4kc-malta \
 ```
 
 ```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-mips64el -m 512 -M malta -cpu 5KEc -kernel ./vmlinuz-5.10.0-26-5kc-malta \
-                     -initrd ./initrd.img-5.10.0-26-5kc-malta \
-                     -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
-                     -hda ./debian-bullseye-mips64el-malta.qcow2 \
-                     -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
+            -initrd ./initrd.img-5.10.0-26-5kc-malta \
+            -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
+            -hda ./debian-bullseye-mips64el-malta.qcow2 \
+            -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
 
 ## Usage
