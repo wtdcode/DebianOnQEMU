@@ -145,6 +145,19 @@ jobs:
               rootfs: 'debian-bullseye-s390x.tar.xz',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
+          - { 
+              os: ubuntu-latest, 
+              suite: bullseye,
+              arch: armel,
+              qemu-arch: "arm",
+              name: 'Debian-bullseye-rpi',
+              kernel: 'linux-image-rpi',
+              artifact: 'debian-bullseye-rpi',
+              hostname: 'debian-bullseye-rpi',
+              qcow2: 'debian-bullseye-rpi.qcow2',
+              rootfs: 'debian-bullseye-rpi.tar.xz',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
           # - { # Disabled due to no kernel available 
           #     os: ubuntu-latest, 
           #     suite: unstable,
