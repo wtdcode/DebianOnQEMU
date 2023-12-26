@@ -246,7 +246,7 @@ jobs:
     - name: '📦 Remove QEMU'
       shell: bash
       run: |
-        rm /usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
+        rm mnt/usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
 
     - name: '📦 Pack qcow2'
       shell: bash
