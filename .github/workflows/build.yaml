@@ -164,7 +164,7 @@ jobs:
     - name: '🚧 Dependency'
       shell: bash
       run: |
-        apt update && apt install libguestfs-tools qemu-utils qemu-user-static linux-image-generic debian-ports-archive-keyring -y
+        apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring binfmt-support -y
       
     - name: '🚧 Deboostrap 1st stage'
       shell: bash
