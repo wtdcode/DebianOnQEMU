@@ -187,7 +187,7 @@ jobs:
 
     # https://wiki.debian.org/LoongArch/sbuildQEMU
     # https://docs.loongnix.cn/loongnix/faq/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A1%8C%E9%9D%A2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html
-    - name: '🚧 Deboostrap 1st stage (loongarch64)'
+    - name: '🚧 Deboostrap 1st stage (ports)'
       if: ${{ contains(matrix.config.arch, 'loong64') || contains(matrix.config.arch, 'riscv64') }}
       shell: bash
       run: |
