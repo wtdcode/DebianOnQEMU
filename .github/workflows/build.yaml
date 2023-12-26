@@ -187,13 +187,13 @@ jobs:
                          --extra-suites=unreleased \
                          ${{ matrix.config.suite }} mnt/ http://ftp.ports.debian.org/debian-ports
         cat >/tmp/qemu-loongarch64 <<EOF
-package qemu-user-static
-type magic
-offset 0
-magic \x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01                    
-mask \xff\xff\xff\xff\xff\xff\xff\xfc\x00\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff
-interpreter /usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
-EOF
+        package qemu-user-static
+        type magic
+        offset 0
+        magic \x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x02\x01                    
+        mask \xff\xff\xff\xff\xff\xff\xff\xfc\x00\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff
+        interpreter /usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
+        EOF
         update-binfmts --import /tmp/qemu-loongarch64 
     
 
