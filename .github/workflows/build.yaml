@@ -207,7 +207,7 @@ jobs:
       shell: bash
       run: |
         update-binfmts --display
-        find /opt/binfmt -name "qemu-*" -exec bash -c 'update-binfmts --importdir /opt/binfmt --import {} && update-binfmts --enable {}' ';'
+        find /opt/binfmt -name "qemu-*" -exec bash -c 'update-binfmts --unimport {} && update-binfmts --importdir /opt/binfmt --import {}' ';'
         update-binfmts --display
         cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
         chroot mnt/ debootstrap/debootstrap --second-stage
