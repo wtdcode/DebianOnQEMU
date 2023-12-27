@@ -245,7 +245,7 @@ jobs:
         umount --recursive --force root.loong64/proc || true
 
     
-    - name: '🚧 Deboostrap Debian Userland (loong64)'
+    - name: '🚧 Deboostrap 1st stage (loong64)'
       if: ${{ contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
@@ -328,7 +328,7 @@ jobs:
         qemu-img convert -c -f raw -O qcow2 raw.img artifact/${{ matrix.config.qcow2 }}
 
     - name: '📦 Pack Initrd & Kernel'
-      if: ${{ !contains(matrix.config.arch, 'loong64') }}
+      if: ${{ contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         find mnt/boot -name "vmlinu*" -exec mv {} ./artifact/vmlinuz-loong64 ';'
@@ -336,7 +336,7 @@ jobs:
         cd artifact && wget -O bios-loong64-8.1.bin -c "https://mirrors.pku.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd"
 
     - name: '📦 Pack Initrd & Kernel'
-      if: ${{ contains(matrix.config.arch, 'loong64') }}
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         cp mnt/boot/vmlinu* ./artifact/
