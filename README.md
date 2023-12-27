@@ -80,11 +80,14 @@ Refer to [QEMU doc](https://wiki.qemu.org/Documentation/Platforms/RISCV) and [De
 
 ```bash
 docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
-qemu-system-aarch64 -m 512 -kernel ./vmlinuz-5.10.0-26-arm64 -initrd ./initrd.img-5.10.0-26-arm64 \
-                    -append "console=ttyAMA0 debug root=/dev/sda net.ifnames=0" \
-                    -hda ./debian-bullseye-arm64.qcow2 \
-                    -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
+qemu-system-s390x -m 512 -machine s390-ccw-virtio -cpu max,zpci=on \
+                    -kernel ./vmlinuz-5.10.0-26-s390x -initrd ./initrd.img-5.10.0-26-s390x \
+                    -append "console=ttyAMA0 debug root=/dev/vda rw net.ifnames=0"\
+                    -hda ./debian-bullseye-s390x.qcow2 \
+                    -nographic -nic user,model=virtio,hostfwd=tcp::5555-:22
 ```
+
+Refer to [QEMU doc](https://wiki.qemu.org/Documentation/Platforms/S390X) for details.
 
 ### PPC
 
