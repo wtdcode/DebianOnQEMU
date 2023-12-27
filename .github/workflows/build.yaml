@@ -213,7 +213,7 @@ jobs:
         apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring binfmt-support -y
       
     - name: '🚧 Deboostrap 1st stage'
-      if: ${{ !(contains(matrix.config.arch, 'loong64') }}
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         mkdir mnt
