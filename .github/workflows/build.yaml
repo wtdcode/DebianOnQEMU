@@ -192,6 +192,7 @@ jobs:
               qcow2: 'debian-bullseye-loong64.qcow2',
               rootfs: 'debian-bullseye-loong64.tar.xz',
               pool: 'http://ftp.ports.debian.org/debian-ports',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
     steps:
