@@ -113,7 +113,7 @@ docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full:v8.2.0 \
 qemu-system-loongarch64 -m 1024m -cpu la464-loongarch-cpu \
                     -M virt -append "console=ttyS0 rw debug root=/dev/vda" \
                     -kernel ./vmlinuz-loong64 -initrd ./initrd.img-loong64 \
-                    -bios ./QEMU_EFI_8.1.fd -hda ./out.qcow2 --nographic \
+                    -bios ./bios-loong64-8.1.bin -hda ./out.qcow2 --nographic \
                     -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
 
