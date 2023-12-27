@@ -285,19 +285,25 @@ jobs:
         cd arch/root.loong64/
         mount --bind /proc target/proc
         mount --bind /dev target/dev
+      
         echo "nameserver 8.8.8.8" >> target/etc/resolv.conf
+        echo ${{ matrix.config.hostname }} > target/etc/hostname
+      
         chroot target/ pacman-key --init
         chroot target/ pacman-key --populate
         sed -i -e "s/CheckSpace/#CheckSpace/g" target/etc/pacman.conf
         chroot target/ pacman -Syu --noconfirm openssh
+    
         chroot target/ systemctl enable sshd
         chroot target/ systemctl enable NetworkManager
+  
         chroot target/ useradd -m -G wheel -s /bin/bash debian
         chroot target/ bash -c 'echo "debian:debian" | chpasswd'
         chroot target/ bash -c 'echo "root:root" | chpasswd'
-        chroot target/ bash -c "echo ${{ matrix.config.hostname }} > target/etc/hostname"
+        
         umount --recursive --force target/dev || true # It's okay they failed
         umount --recursive --force target/proc || true
+  
         cd ../../
         mv mnt debian
         mv arch/root.loong64/target mnt
