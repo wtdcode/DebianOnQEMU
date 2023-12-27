@@ -61,6 +61,20 @@ qemu-system-aarch64 -m 512 -M virt -cpu cortex-a57 -kernel ./vmlinuz-5.10.0-26-a
 
 `cortext-a8` or `cortext-a9` are not supported.
 
+### RISCV64
+
+```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
+qemu-system-riscv64 -m 512 -M virt -kernel ./vmlinux-6.6.8-riscv64\
+                    -initrd ./initrd.img-6.6.8-riscv64 \
+                    -append "rw console=ttyS0 debug root=/dev/vda net.ifnames=0" \
+                    -device virtio-blk-device,drive=hd0 \
+                    -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-device,rng=rng0 \
+                    -drive file=./debian-bullseye-riscv64.qcow2,id=hd0 -nographic \
+                    -device virtio-net-device,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:22 
+```
+
+Refer to [QEMU doc](https://wiki.qemu.org/Documentation/Platforms/RISCV) and [Debian doc](https://wiki.debian.org/RISC-V) for more configurations.
 
 ### S390x
 
