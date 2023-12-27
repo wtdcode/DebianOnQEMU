@@ -10,7 +10,7 @@ jobs:
   Build:
     runs-on: ${{ matrix.config.os }}
     container:
-      image: lazymio/qemu-full
+      image: lazymio/qemu-full:v8.1.4
       options: --privileged
     name: ${{ matrix.config.name }}
     strategy:
@@ -176,6 +176,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: '🚧 Mount binfmt_misc'
+      shell: bash
+      run: |
+        mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+        update-binfmts --display
+        ls /opt/binfmt_fixed/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt_fixed --unimport
+        ls /opt/binfmt_fixed/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt_fixed --import
+        ls /opt/binfmt_fixed/ | awk '{print $1}' | xargs -L 1 update-binfmts --enable
+        update-binfmts --display
+
     - name: '🚧 Dependency'
       shell: bash
       run: |
@@ -207,12 +217,6 @@ jobs:
     - name: '🚧 Deboostrap 2nd stage'
       shell: bash
       run: |
-        update-binfmts --display
-        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt --unimport
-        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt --import
-        ls /opt/binfmt/ | awk '{print $1}' | xargs -L 1 update-binfmts --enable
-        update-binfmts --display
-        cp $(which qemu-${{ matrix.config.qemu-arch }}-static) mnt/usr/bin/
         chroot mnt/ debootstrap/debootstrap --second-stage
 
     - name: '🚧 Install Kernel & fstab'
@@ -242,11 +246,6 @@ jobs:
         chroot mnt bash -c "adduser --disabled-password --gecos '' debian"
         chroot mnt bash -c 'echo "root:root" | chpasswd'
         chroot mnt bash -c 'echo "debian:debian" | chpasswd'
-
-    - name: '📦 Remove QEMU'
-      shell: bash
-      run: |
-        rm mnt/usr/bin/qemu-${{ matrix.config.qemu-arch }}-static
 
     - name: '📦 Pack qcow2'
       shell: bash
