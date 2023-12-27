@@ -211,7 +211,7 @@ jobs:
     - name: '🚧 Dependency'
       shell: bash
       run: |
-        apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring binfmt-support -y
+        apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring aria2 -y
       
     - name: '🚧 Deboostrap 1st stage'
       if: ${{ !contains(matrix.config.arch, 'loong64') }}
@@ -228,10 +228,10 @@ jobs:
       run: |
         mkdir arch
         cd arch
-        timeout -s 9 5m wget -c 'https://mirrors.nju.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
-        timeout -s 9 5m wget -c 'https://mirrors.pku.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
-        timeout -s 9 5m wget -c 'https://mirrors.wsyu.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
-        timeout -s 9 5m wget -c 'https://mirror.iscas.ac.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
+        echo "https://mirrors.nju.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz	\
+        https://mirrors.pku.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz	\
+        https://mirrors.wsyu.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz	\
+        https://mirror.iscas.ac.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz" | aria2c -s14 -x14 -k100M -j 4 --continue=true -i -
         tar xf archlinux-bootstrap-loong64.tar.gz
         mkdir -p root.loong64/target
         # echo "Server = https://mirrors.nju.edu.cn/loongarch/archlinux/$repo/os/$arch" > root.loong64/etc/pacman.d/mirrorlist 
@@ -343,10 +343,10 @@ jobs:
         find mnt/boot -name "vmlinu*" -exec mv {} ./artifact/vmlinuz-loong64 ';'
         find mnt/boot -name "initram*" -exec mv {} ./artifact/initrd.img-loong64 ';'
         cd artifact
-        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.nju.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
-        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.pku.edu.cnloongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
-        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.wsyu.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
-        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirror.iscas.ac.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
+        echo "https://mirrors.nju.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd	\
+        https://mirrors.pku.edu.cnloongarch/archlinux/images/QEMU_EFI_8.1.fd	\
+        https://mirrors.wsyu.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd	\
+        https://mirror.iscas.ac.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" | aria2c -s14 -x14 -k100M -o bios-loong64-8.1.bin -j 4 --continue=true -i -
 
     - name: '📦 Pack Initrd & Kernel'
       if: ${{ !contains(matrix.config.arch, 'loong64') }}
