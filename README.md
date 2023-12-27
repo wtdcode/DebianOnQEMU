@@ -120,7 +120,7 @@ qemu-system-loongarch64 -m 1024m -cpu la464-loongarch-cpu \
 After the system is up, SSH into it and use:
 
 ```bash
-[root@archlinux debian]# chroot .
+[root@archlinux debian]# chroot /debian
 root@archlinux:/# cat /etc/issue
 Debian GNU/Linux trixie/sid \n \l
 
