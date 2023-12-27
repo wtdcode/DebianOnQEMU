@@ -228,7 +228,10 @@ jobs:
       run: |
         mkdir arch
         cd arch
-        wget -c "https://mirrors.nju.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz"
+        timeout -s 9 5m wget -c 'https://mirrors.nju.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
+        timeout -s 9 5m wget -c 'https://mirrors.pku.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
+        timeout -s 9 5m wget -c 'https://mirrors.wsyu.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
+        timeout -s 9 5m wget -c 'https://mirror.iscas.ac.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz' || rm archlinux-bootstrap-loong64.tar.gz
         tar xf archlinux-bootstrap-loong64.tar.gz
         mkdir -p root.loong64/target
         # echo "Server = https://mirrors.nju.edu.cn/loongarch/archlinux/$repo/os/$arch" > root.loong64/etc/pacman.d/mirrorlist 
@@ -339,7 +342,11 @@ jobs:
       run: |
         find mnt/boot -name "vmlinu*" -exec mv {} ./artifact/vmlinuz-loong64 ';'
         find mnt/boot -name "initram*" -exec mv {} ./artifact/initrd.img-loong64 ';'
-        cd artifact && wget -O bios-loong64-8.1.bin -c "https://mirrors.nju.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd"
+        cd artifact
+        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.nju.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
+        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.pku.edu.cnloongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
+        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirrors.wsyu.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
+        timeout -s 9 1m wget -O bios-loong64-8.1.bin -c "https://mirror.iscas.ac.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" || rm QEMU_EFI_8.1.fd
 
     - name: '📦 Pack Initrd & Kernel'
       if: ${{ !contains(matrix.config.arch, 'loong64') }}
