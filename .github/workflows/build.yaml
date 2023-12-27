@@ -102,7 +102,7 @@ jobs:
               qcow2: 'debian-bullseye-arm64.qcow2',
               rootfs: 'debian-bullseye-arm64.tar.xz',
               pool: 'http://deb.debian.org/debian',
-              image: 'lazymio/qemu-full:v8.2.0',
+              image: 'lazymio/qemu-full:v7.1.4', # v8.x will segfault, no idea
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -132,7 +132,7 @@ jobs:
               qcow2: 'debian-bullseye-riscv64.qcow2',
               rootfs: 'debian-bullseye-riscv64.tar.xz',
               pool: 'http://deb.debian.org/debian',
-              image: 'lazymio/qemu-full:v7.2.8', # v8.x will segfault, no idea
+              image: 'lazymio/qemu-full:v8.2.0',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
