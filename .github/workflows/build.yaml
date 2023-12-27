@@ -295,7 +295,7 @@ jobs:
         chroot target/ useradd -m -G wheel -s /bin/bash debian
         chroot target/ bash -c 'echo "debian:debian" | chpasswd'
         chroot target/ bash -c 'echo "root:root" | chpasswd'
-        chroot target/ bash -c "echo ${{ matrix.config.hostname }} > mnt/etc/hostname"
+        chroot target/ bash -c "echo ${{ matrix.config.hostname }} > target/etc/hostname"
         umount --recursive --force target/dev || true # It's okay they failed
         umount --recursive --force target/proc || true
         cd ../../
