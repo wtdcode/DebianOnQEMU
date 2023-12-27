@@ -346,7 +346,8 @@ jobs:
         echo "https://mirrors.nju.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd	\
         https://mirrors.pku.edu.cnloongarch/archlinux/images/QEMU_EFI_8.1.fd	\
         https://mirrors.wsyu.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd	\
-        https://mirror.iscas.ac.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" | aria2c --lowest-speed-limit=200K -s14 -x14 -k100M -o bios-loong64-8.1.bin -j 4 --continue=true -i -
+        https://mirror.iscas.ac.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd" | aria2c --lowest-speed-limit=200K -s14 -x14 -k100M -j 4 --continue=true -i -
+        mv QEMU_EFI_8.1.fd bios-loong64-8.1.bin
 
     - name: '📦 Pack Initrd & Kernel'
       if: ${{ !contains(matrix.config.arch, 'loong64') }}
