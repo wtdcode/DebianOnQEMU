@@ -132,7 +132,7 @@ jobs:
               qcow2: 'debian-bullseye-riscv64.qcow2',
               rootfs: 'debian-bullseye-riscv64.tar.xz',
               pool: 'http://deb.debian.org/debian',
-              image: 'lazymio/qemu-full:v7.2.8',
+              image: 'lazymio/qemu-full:v7.2.8', # v8.x will segfault, no idea
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -180,20 +180,20 @@ jobs:
               image: 'lazymio/qemu-full:v8.2.0',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
-          # - { # Disabled due to no kernel available 
-          #     os: ubuntu-latest, 
-          #     suite: unstable,
-          #     arch: loong64,
-          #     qemu-arch: "loongarch64",
-          #     name: 'Debian-bullseye-loong64',
-          #     kernel: 'linux-image-loong64',
-          #     artifact: 'debian-bullseye-loong64',
-          #     hostname: 'debian-bullseye-loong64',
-          #     qcow2: 'debian-bullseye-loong64.qcow2',
-          #     rootfs: 'debian-bullseye-loong64.tar.xz',
-          #     pool: 'http://ftp.ports.debian.org/debian-ports',
-          #     iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
-          #   }
+          - { # Disabled due to no kernel available 
+              os: ubuntu-latest, 
+              suite: unstable,
+              arch: loong64,
+              qemu-arch: "loongarch64",
+              name: 'Debian-bullseye-loong64',
+              kernel: 'linux-image-loong64',
+              artifact: 'debian-bullseye-loong64',
+              hostname: 'debian-bullseye-loong64',
+              qcow2: 'debian-bullseye-loong64.qcow2',
+              rootfs: 'debian-bullseye-loong64.tar.xz',
+              pool: 'http://ftp.ports.debian.org/debian-ports',
+              iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
+            }
     steps:
     - uses: actions/checkout@v2
 
@@ -206,7 +206,7 @@ jobs:
         ls /opt/binfmt_fixed/ | awk '{print $1}' | xargs -L 1 update-binfmts --importdir /opt/binfmt_fixed --import
         ls /opt/binfmt_fixed/ | awk '{print $1}' | xargs -L 1 update-binfmts --enable
         update-binfmts --display
-
+    
     - name: '🚧 Dependency'
       shell: bash
       run: |
@@ -221,11 +221,34 @@ jobs:
 
     # https://wiki.debian.org/LoongArch/sbuildQEMU
     # https://docs.loongnix.cn/loongnix/faq/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A1%8C%E9%9D%A2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html
-    - name: '🚧 Deboostrap 1st stage (ports)'
+    - name: '🚧 Install Loong ArchLiunux firstly'
       if: ${{ contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
-        mkdir mnt
+        mkdir arch
+        cd arch
+        wget -c "https://mirrors.pku.edu.cn/loongarch/archlinux/iso/latest/archlinux-bootstrap-loong64.tar.gz"
+        tar xf archlinux-bootstrap-loong64.tar.gz
+        mkdir -p root.loong64/target
+        # echo "Server = https://mirrors.pku.edu.cn/loongarch/archlinux/$repo/os/$arch" > root.loong64/etc/pacman.d/mirrorlist 
+        echo "nameserver 8.8.8.8" >> root.loong64/etc/resolv.conf # Configure DNS manually
+        mount --bind /proc root.loong64/proc
+        mount --bind /dev root.loong64/dev
+        chroot root.loong64/ pacman-key --init
+        chroot root.loong64/ pacman-key --populate
+        # chroot root.loong64/ pacman-key --refresh-keys # Slow and seems not necessary
+        sed -i -e "s/CheckSpace/#CheckSpace/g" root.loong64/etc/pacman.conf
+        chroot root.loong64/ pacman -Syu --noconfirm archlinux-keyring
+        for i in 1 2 3 4 5; do bash -c "chroot root.loong64/ pacstrap /target base base-devel linux linux-firmware networkmanager grub efibootmgr" && break; done
+        umount --recursive --force root.loong64/dev || true # It's okay they failed
+        umount --recursive --force root.loong64/proc || true
+
+    
+    - name: '🚧 Deboostrap Debian Userland (loong64)'
+      if: ${{ contains(matrix.config.arch, 'loong64') }}
+      shell: bash
+      run: |
+        mkdir mnt/
         debootstrap --foreign --arch=${{ matrix.config.arch }} \
                          --variant=buildd --include=locales \
                          --include=debian-ports-archive-keyring \
@@ -241,6 +264,7 @@ jobs:
         chroot mnt/ debootstrap/debootstrap --second-stage
 
     - name: '🚧 Install Kernel & fstab'
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         bash -c "echo 'fake /usr ext4 fake 0 1' > mnt/etc/fstab"
@@ -248,11 +272,38 @@ jobs:
         bash -c "echo '/dev/sda / ext4 errors=remount-ro 0 1' > mnt/etc/fstab"
     
     - name: '🚧 Install SSH'
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         chroot mnt/ apt install openssh-server -y
 
+    - name: '🚧 Configure Loongarch ArchLinux'
+      if: ${{ contains(matrix.config.arch, 'loong64') }}
+      shell: bash
+      run: |
+        cd arch/root.loong64/
+        mount --bind /proc target/proc
+        mount --bind /dev target/dev
+        echo "nameserver 8.8.8.8" >> target/etc/resolv.conf
+        chroot target/ pacman-key --init
+        chroot target/ pacman-key --populate
+        sed -i -e "s/CheckSpace/#CheckSpace/g" target/etc/pacman.conf
+        chroot target/ pacman -Syu --noconfirm openssh
+        chroot target/ systemctl enable sshd
+        chroot target/ systemctl enable NetworkManager
+        chroot target/ useradd -m -G wheel -s /bin/bash debian
+        chroot target/ bash -c 'echo "debian:debian" | chpasswd'
+        chroot target/ bash -c 'echo "root:root" | chpasswd'
+        chroot target/ bash -c "echo ${{ matrix.config.hostname }} > mnt/etc/hostname"
+        umount --recursive --force target/dev || true # It's okay they failed
+        umount --recursive --force target/proc || true
+        cd ../../
+        mv mnt debian
+        mv arch/root.loong64/target mnt
+        mv debian mnt/
+
     - name: '🚧 Configure Debian'
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         bash -c "ls -lha mnt/etc/network/"
@@ -276,6 +327,15 @@ jobs:
         qemu-img convert -c -f raw -O qcow2 raw.img artifact/${{ matrix.config.qcow2 }}
 
     - name: '📦 Pack Initrd & Kernel'
+      if: ${{ !contains(matrix.config.arch, 'loong64') }}
+      shell: bash
+      run: |
+        find mnt/boot -name "vmlinu*" -exec mv {} ./artifact/vmlinuz-loong64 ';'
+        find mnt/boot -name "initram*" -exec mv {} ./artifact/initrd.img-loong64 ';'
+        cd artifact && wget -O bios-loong64-8.1.bin -c "https://mirrors.pku.edu.cn/loongarch/archlinux/images/QEMU_EFI_8.1.fd"
+
+    - name: '📦 Pack Initrd & Kernel'
+      if: ${{ contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         cp mnt/boot/vmlinu* ./artifact/

@@ -103,6 +103,32 @@ qemu-system-mips64el -m 512 -M malta -cpu 5KEc -kernel ./vmlinuz-5.10.0-26-5kc-m
             -hda ./debian-bullseye-mips64el-malta.qcow2 \
             -nographic -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
+
+### Loongarch64
+
+So far, Loongarch64 Debian ports are [not complete](https://wiki.debian.org/Ports/loong64) but we can boot Loong Archlinux and run debian userland inside.
+
+```bash
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full:v8.2.0 \
+qemu-system-loongarch64 -m 1024m -cpu la464-loongarch-cpu \
+                    -M virt -append "console=ttyS0 rw debug root=/dev/vda" \
+                    -kernel ./vmlinuz-loong64 -initrd ./initrd.img-loong64 \
+                    -bios ./QEMU_EFI_8.1.fd -hda ./out.qcow2 --nographic \
+                    -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
+```
+
+After the system is up, SSH into it and use:
+
+```bash
+[root@archlinux debian]# chroot .
+root@archlinux:/# cat /etc/issue
+Debian GNU/Linux trixie/sid \n \l
+
+root@archlinux:/# 
+```
+
+Once Debian ports is available we can jump over ArchLinux and boot Debian directly.
+
 ## Usage
 
 Two users created: `root:root` and `debian:debian` and ssh server is up by default.
