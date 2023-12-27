@@ -10,7 +10,7 @@ jobs:
   Build:
     runs-on: ${{ matrix.config.os }}
     container:
-      image: lazymio/qemu-full:v8.1.4
+      image: ${{ matrix.config.image }}
       options: --privileged
     name: ${{ matrix.config.name }}
     strategy:
@@ -28,6 +28,8 @@ jobs:
               hostname: 'debian-bullseye-amd64',
               qcow2: 'debian-bullseye-amd64.qcow2',
               rootfs: 'debian-bullseye-amd64.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -41,6 +43,8 @@ jobs:
               hostname: 'debian-bullseye-mipsel-malta',
               qcow2: 'debian-bullseye-mipsel-malta.qcow2',
               rootfs: 'debian-bullseye-mipsel-malta.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -54,6 +58,8 @@ jobs:
               hostname: 'debian-bullseye-mips64el-malta',
               qcow2: 'debian-bullseye-mips64el-malta.qcow2',
               rootfs: 'debian-bullseye-mips64el-malta.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -67,6 +73,8 @@ jobs:
               hostname: 'debian-bullseye-armhf-armmp',
               qcow2: 'debian-bullseye-armhf-armmp.qcow2',
               rootfs: 'debian-bullseye-armhf-armmp.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           # - { 
@@ -93,6 +101,8 @@ jobs:
               hostname: 'debian-bullseye-arm64',
               qcow2: 'debian-bullseye-arm64.qcow2',
               rootfs: 'debian-bullseye-arm64.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.2.0',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -106,6 +116,8 @@ jobs:
               hostname: 'debian-bullseye-i386',
               qcow2: 'debian-bullseye-i386.qcow2',
               rootfs: 'debian-bullseye-i386.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -119,6 +131,8 @@ jobs:
               hostname: 'debian-bullseye-riscv64',
               qcow2: 'debian-bullseye-riscv64.qcow2',
               rootfs: 'debian-bullseye-riscv64.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v7.2.8',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -132,6 +146,8 @@ jobs:
               hostname: 'debian-bullseye-ppc64el',
               qcow2: 'debian-bullseye-ppc64el.qcow2',
               rootfs: 'debian-bullseye-ppc64el.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.1.4',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -145,6 +161,8 @@ jobs:
               hostname: 'debian-bullseye-s390x',
               qcow2: 'debian-bullseye-s390x.qcow2',
               rootfs: 'debian-bullseye-s390x.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.2.0',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           - { 
@@ -158,6 +176,8 @@ jobs:
               hostname: 'debian-bullseye-rpi',
               qcow2: 'debian-bullseye-rpi.qcow2',
               rootfs: 'debian-bullseye-rpi.tar.xz',
+              pool: 'http://deb.debian.org/debian',
+              image: 'lazymio/qemu-full:v8.2.0',
               iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
             }
           # - { # Disabled due to no kernel available 
@@ -171,6 +191,7 @@ jobs:
           #     hostname: 'debian-bullseye-loong64',
           #     qcow2: 'debian-bullseye-loong64.qcow2',
           #     rootfs: 'debian-bullseye-loong64.tar.xz',
+          #     pool: 'http://ftp.ports.debian.org/debian-ports',
           #     iface: 'eth0' # Append "net.ifnames=0", ref: https://wiki.debian.org/NetworkInterfaceNames
           #   }
     steps:
@@ -192,16 +213,16 @@ jobs:
         apt update && apt install libguestfs-tools linux-image-generic debian-ports-archive-keyring binfmt-support -y
       
     - name: '🚧 Deboostrap 1st stage'
-      if: ${{ !(contains(matrix.config.arch, 'loong64') || contains(matrix.config.arch, 'riscv64')) }}
+      if: ${{ !(contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         mkdir mnt
-        debootstrap --foreign --arch=${{ matrix.config.arch }} --include=locales ${{ matrix.config.suite }} mnt/ http://deb.debian.org/debian
+        debootstrap --foreign --arch=${{ matrix.config.arch }} --include=locales ${{ matrix.config.suite }} mnt/ ${{ matrix.config.pool }}
 
     # https://wiki.debian.org/LoongArch/sbuildQEMU
     # https://docs.loongnix.cn/loongnix/faq/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%A1%8C%E9%9D%A2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html
     - name: '🚧 Deboostrap 1st stage (ports)'
-      if: ${{ contains(matrix.config.arch, 'loong64') || contains(matrix.config.arch, 'riscv64') }}
+      if: ${{ contains(matrix.config.arch, 'loong64') }}
       shell: bash
       run: |
         mkdir mnt
@@ -211,7 +232,7 @@ jobs:
                          --components=main \
                          --keyring=/etc/apt/trusted.gpg.d/debian-ports-archive-2023.gpg \
                          --extra-suites=unreleased \
-                         ${{ matrix.config.suite }} mnt/ http://ftp.ports.debian.org/debian-ports
+                         ${{ matrix.config.suite }} mnt/ ${{ matrix.config.pool }}
     
 
     - name: '🚧 Deboostrap 2nd stage'
