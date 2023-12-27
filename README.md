@@ -113,18 +113,46 @@ docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full:v8.2.0 \
 qemu-system-loongarch64 -m 1024m -cpu la464-loongarch-cpu \
                     -M virt -append "console=ttyS0 rw debug root=/dev/vda" \
                     -kernel ./vmlinuz-loong64 -initrd ./initrd.img-loong64 \
-                    -bios ./bios-loong64-8.1.bin -hda ./out.qcow2 --nographic \
+                    -bios ./bios-loong64-8.1.bin \
+                    -hda ./debian-bullseye-loong64.qcow2 --nographic \
                     -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22
 ```
 
 After the system is up, SSH into it and use:
 
-```bash
-[root@archlinux debian]# chroot /debian
-root@archlinux:/# cat /etc/issue
-Debian GNU/Linux trixie/sid \n \l
+```
+[root@debian-bullseye-loong64 ~]# chroot /debian /bin/bash
+I have no name!@debian-bullseye-loong64:/# apt
+apt 2.7.7 (loong64)
+Usage: apt [options] command
 
-root@archlinux:/# 
+apt is a commandline package manager and provides commands for
+searching and managing as well as querying information about packages.
+It provides the same functionality as the specialized APT tools,
+like apt-get and apt-cache, but enables options more suitable for
+interactive use by default.
+
+Most used commands:
+  list - list packages based on package names
+  search - search in package descriptions
+  show - show package details
+  install - install packages
+  reinstall - reinstall packages
+  remove - remove packages
+  autoremove - automatically remove all unused packages
+  update - update list of available packages
+  upgrade - upgrade the system by installing/upgrading packages
+  full-upgrade - upgrade the system by removing/installing/upgrading packages
+  edit-sources - edit the source information file
+  satisfy - satisfy dependency strings
+
+See apt(8) for more information about the available commands.
+Configuration options and syntax is detailed in apt.conf(5).
+Information about how to configure sources can be found in sources.list(5).
+Package and version choices can be expressed via apt_preferences(5).
+Security details are available in apt-secure(8).
+                                        This APT has Super Cow Powers.
+I have no name!@debian-bullseye-loong64:/#
 ```
 
 Once Debian ports is available we can jump over ArchLinux and boot Debian directly.
