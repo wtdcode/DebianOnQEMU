@@ -39,7 +39,7 @@ qemu-system-i386 -m 512 -kernel ./vmlinuz-5.10.0-26-686 \
 ### ARM
 
 ```bash
-docker run -v `pwd`:/work --rm -it lazymio/qemu-full \
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
 qemu-system-arm -m 512 -M virt -cpu cortex-a15 \
                 -kernel ./vmlinuz-5.10.0-13-armmp \
                 -initrd ./initrd.img-5.10.0-13-armmp \
