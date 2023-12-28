@@ -311,6 +311,8 @@ jobs:
         mv mnt debian
         mv arch/root.loong64/target mnt
         mv debian mnt/
+        
+        echo "nameserver 8.8.8.8" >> mnt/debian/etc/resolv.conf
 
     - name: '🚧 Configure Debian'
       if: ${{ !contains(matrix.config.arch, 'loong64') }}
