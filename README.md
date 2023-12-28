@@ -202,4 +202,22 @@ Once Debian ports is available we can jump over ArchLinux and boot Debian direct
 
 ## Usage
 
+### SSH
+
 Two users created: `root:root` and `debian:debian` and ssh server is up by default.
+
+### Resize disk
+
+On host:
+
+```bash
+qemu-img resize ./debian-bullseye-loong64.qcow2 16G
+```
+
+On emulated targets:
+
+```bash
+parted /dev/vda resizepart 1 100%
+resize2fs /dev/vda
+reboot
+```
