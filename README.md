@@ -39,14 +39,17 @@ qemu-system-i386 -m 512 -kernel ./vmlinuz-5.10.0-26-686 \
 ### ARM
 
 ```bash
-docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full \
+docker run -p 5555:5555 -v `pwd`:/work --rm -it lazymio/qemu-full:v8.2.0 \
 qemu-system-arm -m 512 -M virt -cpu cortex-a15 \
-                -kernel ./vmlinuz-5.10.0-13-armmp \
-                -initrd ./initrd.img-5.10.0-13-armmp \
-                -hda ./debian-bullseye-armhf-armmp.qcow2 \
-                -append "root=/dev/vda rw console=ttyAMA0 rodata=n" \
+                -kernel ./vmlinuz-5.10.0-26-armmp \
+                -initrd ./initrd.img-5.10.0-26-armmp \
+                -device virtio-blk-device,drive=hd0 \
+                -drive if=none,file=debian-bullseye-armhf-armmp.qcow2,id=hd0 \
+                -append "root=/dev/vda rw console=ttyAMA0 rodata=n net.ifnames=0" \
                 -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22 -nographic
 ```
+
+Refer to [QEMU ARM doc](https://wiki.qemu.org/Documentation/Platforms/ARM) for details.
 
 ### ARM64
 
