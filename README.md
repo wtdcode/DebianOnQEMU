@@ -178,6 +178,26 @@ Security details are available in apt-secure(8).
 root@debian-bullseye-loong64:/#
 ```
 
+Or using a docker approach:
+
+```bash
+pacmam -Syu docker
+mkdir -p /etc/docker
+# This is important to avoid ip addresses conflicting with host's docker!
+echo > /etc/docker/daemon.json <<EOF
+{
+	"default-address-pools": [
+		{"base": "10.99.0.0/16", "size":24}
+	]
+}
+EOF
+systemctl start docker && systemctl enable docker
+echo "FROM scratch" > /debian/Dockerfile
+echo "ADD . /" >> /debian/Dockerfile
+cd /debian && docker build -t debian_rootfs .
+docker run -it --rm debian_rootfs bash
+```
+
 Once Debian ports is available we can jump over ArchLinux and boot Debian directly.
 
 ## Usage
