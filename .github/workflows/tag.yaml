@@ -2,7 +2,7 @@ name: Tag and Release
 
 on:
   schedule:
-    - cron: '0 9 5 */2 *'
+    - cron: '0 9 5 * *'
   workflow_dispatch:
 
 jobs:
