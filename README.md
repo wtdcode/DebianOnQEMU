@@ -138,8 +138,14 @@ qemu-system-loongarch64 -m 1024m -cpu la464-loongarch-cpu \
 After the system is up, SSH into it and use:
 
 ```
-[root@debian-bullseye-loong64 ~]# chroot /debian /bin/bash
-I have no name!@debian-bullseye-loong64:/# apt
+[root@debian-bullseye-loong64 ~]# cd /debian/
+[root@debian-bullseye-loong64 debian]# chroot .
+root@debian-bullseye-loong64:/# cat /etc/issue
+Debian GNU/Linux trixie/sid \n \l
+
+root@debian-bullseye-loong64:/# uname -a
+Linux debian-bullseye-loong64 6.7.0-rc2-2 #1 SMP PREEMPT Mon, 27 Nov 2023 08:42:49 +0000 loongarch64 GNU/Linux
+root@debian-bullseye-loong64:/# apt
 apt 2.7.7 (loong64)
 Usage: apt [options] command
 
@@ -169,7 +175,7 @@ Information about how to configure sources can be found in sources.list(5).
 Package and version choices can be expressed via apt_preferences(5).
 Security details are available in apt-secure(8).
                                         This APT has Super Cow Powers.
-I have no name!@debian-bullseye-loong64:/#
+root@debian-bullseye-loong64:/#
 ```
 
 Once Debian ports is available we can jump over ArchLinux and boot Debian directly.
