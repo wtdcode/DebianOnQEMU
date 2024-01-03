@@ -46,7 +46,8 @@ qemu-system-arm -m 512 -M virt -cpu cortex-a15 \
                 -device virtio-blk-device,drive=hd0 \
                 -drive if=none,file=debian-bullseye-armhf-armmp.qcow2,id=hd0 \
                 -append "root=/dev/vda rw console=ttyAMA0 rodata=n net.ifnames=0" \
-                -nic user,model=virtio-net-pci,hostfwd=tcp::5555-:22 -nographic
+                -device virtio-net-device,netdev=usernet \
+		-netdev user,id=usernet,hostfwd=tcp::5555-:22 -nographic
 ```
 
 Refer to [QEMU ARM doc](https://wiki.qemu.org/Documentation/Platforms/ARM) for details.
